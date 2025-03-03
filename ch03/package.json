@@ -1,6 +1,7 @@
 {
-  "main": "00-meadowlark.js",
+  "main": "meadowlark.js",
   "dependencies": {
-    "express": "^4.21.2"
+    "express": "^4.21.2",
+    "express-handlebars": "^8.0.1"
   }
 }
