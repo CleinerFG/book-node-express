@@ -4,6 +4,9 @@ const { engine } = require('express-handlebars');
 const app = express();
 const port = process.env.PORT || 3000;
 
+// Rotas estáticas
+app.use(express.static(__dirname + '/public'));
+
 // Configurando Handlebars
 app.engine('handlebars', engine({ defaultLayout: 'main' }));
 app.set('view engine', 'handlebars');
