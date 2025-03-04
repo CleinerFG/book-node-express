@@ -9,7 +9,19 @@ const port = process.env.PORT || 3000;
 app.use(express.static(__dirname + '/public'));
 
 // Configurando Handlebars
-app.engine('handlebars', engine({ defaultLayout: 'main' }));
+app.engine(
+  'handlebars',
+  engine({
+    defaultLayout: 'main',
+    helpers: {
+      section: function (name, options) {
+        if (!this._sections) this._sections = {};
+        this._sections[name] = options.fn(this);
+        return null;
+      },
+    },
+  })
+);
 app.set('view engine', 'handlebars');
 
 app.get('/', handlers.home);
