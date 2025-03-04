@@ -12,6 +12,9 @@ app.use(express.static(__dirname + '/public'));
 // Permite receber req POST de form HTML nativo
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// Receber json de req POST
+app.use(express.json());
+
 // Configurando Handlebars
 app.engine(
   'handlebars',
@@ -30,9 +33,8 @@ app.set('view engine', 'handlebars');
 
 app.get('/', handlers.home);
 app.get('/about', handlers.about);
-app.get('/newsletter-signup', handlers.newsletterSignup);
-app.post('/newsletter-signup/process', handlers.newsletterSignupProcess);
-app.get('/newsletter-signup/thank-you', handlers.newsletterSignupThankYou);
+app.get('/newsletter', handlers.newsletter);
+app.post('/api/newsletter-signup', handlers.api.newsletterSignup);
 
 // Middleware para 404
 app.use(handlers.notFound);
