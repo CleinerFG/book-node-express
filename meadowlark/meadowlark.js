@@ -17,8 +17,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Receber json de req POST
 app.use(express.json());
 
-
 app.use(cookieParser(credentials.cookieSecret));
+
+app.use((req, res, next) => {
+  console.log(`processing request for ${req.url}....`);
+  next();
+});
 
 // Configurando Handlebars
 app.engine(
