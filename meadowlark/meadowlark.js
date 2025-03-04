@@ -6,9 +6,16 @@ const handlers = require('./lib/handlers');
 const { credentials } = require('./config');
 const morgan = require('morgan');
 const fs = require('fs');
+const cluster = require('cluster');
 
 const app = express();
 const port = process.env.PORT || 3000;
+
+app.use((req, res, next) => {
+  if (cluster.isWorker)
+    console.log(`Worker ${cluster.worker.id} received request`);
+  next();
+});
 
 switch (app.get('env')) {
   case 'development':
@@ -63,13 +70,33 @@ app.post(
   '/api/vacation-photo-contest/:year/:month',
   handlers.api.vacationPhotoContest
 );
+
+// Teste falhas nao capturadas
+app.get('/fail', (req, res) => {
+  throw new Error('Nope!');
+});
+
+app.get('/epic-fail', (req, res) => {
+  process.nextTick(() => {
+    throw new Error('Kaboom!');
+  });
+});
+
+// Capturar falhas inesperadas
+process.on('uncaughtException', (err) => {
+  console.error('UNCAUGHT EXCEPTION\n', err.stack);
+  // faça a limpeza que precisar aqui...feche
+  // conexões de banco de dados, etc.
+  process.exit(1);
+});
+
 // Middleware para 404
 app.use(handlers.notFound);
 
 // Middleware para erro 500
 app.use(handlers.serverError);
 
-if (require.main === module) {
+function startServer(port) {
   app.listen(
     port,
     () =>
@@ -81,6 +108,12 @@ if (require.main === module) {
       )
     /* eslint-enable quotes */
   );
+}
+if (require.main === module) {
+  // a aplicação é executada diretamente; inicia o servidor do aplicativo
+  startServer(port);
 } else {
-  module.exports = app;
+  // a aplicação é importada como um módulo com "require":
+  // exporta a função que cria o servidor
+  module.exports = startServer;
 }
