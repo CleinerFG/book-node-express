@@ -1,6 +1,7 @@
 const express = require('express');
 const { engine } = require('express-handlebars');
 const bodyParser = require('body-parser');
+const multiparty = require('multiparty');
 const handlers = require('./lib/handlers');
 
 const app = express();
@@ -35,7 +36,11 @@ app.get('/', handlers.home);
 app.get('/about', handlers.about);
 app.get('/newsletter', handlers.newsletter);
 app.post('/api/newsletter-signup', handlers.api.newsletterSignup);
-
+app.get('/contest/vacation-photo/', handlers.vacationPhoto);
+app.post(
+  '/api/vacation-photo-contest/:year/:month',
+  handlers.api.vacationPhotoContest
+);
 // Middleware para 404
 app.use(handlers.notFound);
 
