@@ -72,6 +72,7 @@ app.post(
 );
 
 // Teste falhas nao capturadas
+/* eslint-disable no-unused-vars */
 app.get('/fail', (req, res) => {
   throw new Error('Nope!');
 });
@@ -81,6 +82,7 @@ app.get('/epic-fail', (req, res) => {
     throw new Error('Kaboom!');
   });
 });
+/* eslint-enable no-unused-vars */
 
 // Capturar falhas inesperadas
 process.on('uncaughtException', (err) => {
