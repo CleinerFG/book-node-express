@@ -1,8 +1,9 @@
 const express = require('express');
 const { engine } = require('express-handlebars');
 const bodyParser = require('body-parser');
-const multiparty = require('multiparty');
+const cookieParser = require('cookie-parser');
 const handlers = require('./lib/handlers');
+const { credentials } = require('./config');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -15,6 +16,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Receber json de req POST
 app.use(express.json());
+
+
+app.use(cookieParser(credentials.cookieSecret));
 
 // Configurando Handlebars
 app.engine(

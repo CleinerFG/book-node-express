@@ -2,8 +2,11 @@ const fortune = require('./fortune');
 
 exports.home = (req, res) => res.render('home');
 
-exports.about = (req, res) =>
+exports.about = (req, res) => {
+  res.cookie('monster', 'nom nom');
+  res.cookie('signed_monster', 'nom nom', { signed: true });
   res.render('about', { fortune: fortune.getFortune() });
+};
 
 exports.notFound = (req, res) => res.render('404');
 
@@ -16,6 +19,8 @@ exports.serverError = (err, req, res, next) => res.render('500');
 
 exports.newsletter = (req, res) => {
   res.render('newsletter', { csrf: 'CSRF token goes here' });
+  const signedMonster = req.signedCookies.signed_monster;
+  console.table(signedMonster);
 };
 
 exports.vacationPhoto = (req, res) => {
