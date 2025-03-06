@@ -5,10 +5,6 @@ const cors = require('cors')
 
 const handlers = require('./lib/handlers')
 
-const credentials = require('./credentials')
-
-require('./db')
-
 const app = express()
 
 app.use('/api', cors())
